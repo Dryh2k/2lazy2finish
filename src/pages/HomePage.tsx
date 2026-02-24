@@ -88,6 +88,18 @@ const HomePage: React.FC = () => {
     }
   };
 
+  const triggerFlow = async (tag: string) => {
+    try {
+      await fetch('http://localhost:3001/api/trigger-flow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ TAG: tag }),
+      });
+    } catch (error) {
+      console.error('triggerFlow error:', error);
+    }
+  };
+
   return (
     <div className="bg-bg-light dark:bg-bg-dark text-slate-800 dark:text-white h-screen w-screen flex flex-col transition-colors duration-300 overflow-hidden">
       {/* Physics Canvas */}
@@ -97,31 +109,28 @@ const HomePage: React.FC = () => {
       <div className="relative z-10 flex flex-col h-full w-full justify-between p-6 md:p-10" style={{ pointerEvents: 'none' }}>
         {/* Header */}
         <header className="w-full flex justify-between items-center">
-          <div className="flex items-center gap-2 group cursor-pointer" style={{ pointerEvents: 'auto' }}>
+          <div className="flex items-center gap-2 group cursor-pointer" style={{ pointerEvents: 'auto' }} id="home-logo-2T2" onClick={() => triggerFlow('home-logo-2T2')}>
             <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-lg shadow-[0_0_15px_rgba(173,43,238,0.5)] group-hover:scale-110 transition-transform">
-              DH
+              2T2
             </div>
-            <span className="font-display font-bold text-lg tracking-tight hidden md:block">DryH</span>
+            <span className="font-display font-bold text-lg tracking-tight hidden md:block">2lazy2finish</span>
           </div>
 
           <nav className="glass-panel rounded-full px-6 py-3 hidden md:flex gap-8 shadow-lg" style={{ pointerEvents: 'auto' }}>
-            <a className="text-sm font-medium hover:text-primary transition-colors" href="#">
-              Play
+            <a className="text-sm font-medium hover:text-primary transition-colors" href="#" id="nav-play" onClick={() => triggerFlow('nav-play')}>
             </a>
-            <a className="text-sm font-medium hover:text-primary transition-colors" href="#">
-              Experiment
+            <a className="text-sm font-medium hover:text-primary transition-colors" href="#" id="nav-experiment" onClick={() => triggerFlow('nav-experiment')}>
             </a>
-            <a className="text-sm font-medium hover:text-primary transition-colors" href="#">
-              About
+            <a className="text-sm font-medium hover:text-primary transition-colors" href="#" id="nav-about" onClick={() => triggerFlow('nav-about')}>
             </a>
           </nav>
 
-          <button className="md:hidden p-2 rounded-full glass-panel text-white" style={{ pointerEvents: 'auto' }}>
+          <button className="md:hidden p-2 rounded-full glass-panel text-white" style={{ pointerEvents: 'auto' }} id="nav-menu-mobile-hamburger" onClick={() => triggerFlow('nav-menu-mobile-hamburger')}>
             <span className="material-symbols-outlined">menu</span>
           </button>
 
           <div className="hidden md:block" style={{ pointerEvents: 'auto' }}>
-            <button className="bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 px-5 py-2 rounded-full text-sm font-semibold transition-all">
+            <button className="bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 px-5 py-2 rounded-full text-sm font-semibold transition-all" id="btn-login" onClick={() => triggerFlow('btn-login')}>
               Login
             </button>
           </div>
@@ -143,13 +152,14 @@ const HomePage: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4" style={{ pointerEvents: 'auto' }}>
             <button
-              onClick={handleReshuffle}
+              onClick={() => { triggerFlow('btn-reshuffle'); handleReshuffle(); }}
               className="bg-primary hover:bg-purple-600 text-white px-8 py-4 rounded-full font-semibold text-lg shadow-[0_0_30px_rgba(173,43,238,0.4)] hover:shadow-[0_0_50px_rgba(173,43,238,0.6)] hover:-translate-y-1 transition-all flex items-center gap-2 justify-center"
+              id="btn-reshuffle"
             >
               <span className="material-symbols-outlined">restart_alt</span>
               Reshuffle
             </button>
-            <button className="glass-panel hover:bg-white/10 text-slate-800 dark:text-white px-8 py-4 rounded-full font-semibold text-lg border border-white/10 transition-all">
+            <button className="glass-panel hover:bg-white/10 text-slate-800 dark:text-white px-8 py-4 rounded-full font-semibold text-lg border border-white/10 transition-all" id="btn-learn-more" onClick={() => triggerFlow('btn-learn-more')}>
               Learn More
             </button>
           </div>
@@ -168,11 +178,12 @@ const HomePage: React.FC = () => {
 
           <div className="flex gap-3" style={{ pointerEvents: 'auto' }}>
             <button
-              onClick={handleGravityToggle}
+              onClick={() => { triggerFlow('btn-gravity-toggle'); handleGravityToggle(); }}
               className={`w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-primary/20 text-slate-400 hover:text-white transition-colors group relative ${
                 gravityOn ? 'text-primary bg-primary/20' : ''
               }`}
               title="Toggle Gravity"
+              id="btn-gravity-toggle"
             >
               <span className="material-symbols-outlined group-hover:rotate-180 transition-transform duration-500">
                 public
@@ -182,9 +193,10 @@ const HomePage: React.FC = () => {
               </span>
             </button>
             <button
-              onClick={handleReset}
+              onClick={() => { triggerFlow('btn-reset'); handleReset(); }}
               className="w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-primary/20 text-slate-400 hover:text-white transition-colors group relative"
               title="Reset Scene"
+              id="btn-reset"
             >
               <span className="material-symbols-outlined group-hover:rotate-90 transition-transform">refresh</span>
               <span className="absolute bottom-full mb-2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
