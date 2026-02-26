@@ -24,6 +24,8 @@ export const useConfettiParticles = (
     const engine = engineRef.current;
     const render = renderRef.current;
     const world = engine.world;
+    const renderWidth = render.options.width ?? window.innerWidth;
+    const renderHeight = render.options.height ?? window.innerHeight;
 
     // Create confetti particle
     const createConfetti = (x: number, y: number): Matter.Body => {
@@ -68,8 +70,8 @@ export const useConfettiParticles = (
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       particles.push(
         createConfetti(
-          Common.random(0, render.options.width),
-          Common.random(0, render.options.height)
+          Common.random(0, renderWidth),
+          Common.random(0, renderHeight)
         )
       );
     }
@@ -79,31 +81,31 @@ export const useConfettiParticles = (
     const wallThickness = 200;
     const walls = [
       Bodies.rectangle(
-        render.options.width / 2,
+        renderWidth / 2,
         -wallThickness / 2,
-        render.options.width * 2,
+        renderWidth * 2,
         wallThickness,
         { isStatic: true, render: { visible: false } }
       ),
       Bodies.rectangle(
-        render.options.width / 2,
-        render.options.height + wallThickness / 2,
-        render.options.width * 2,
+        renderWidth / 2,
+        renderHeight + wallThickness / 2,
+        renderWidth * 2,
         wallThickness,
         { isStatic: true, render: { visible: false } }
       ),
       Bodies.rectangle(
         -wallThickness / 2,
-        render.options.height / 2,
+        renderHeight / 2,
         wallThickness,
-        render.options.height * 2,
+        renderHeight * 2,
         { isStatic: true, render: { visible: false } }
       ),
       Bodies.rectangle(
-        render.options.width + wallThickness / 2,
-        render.options.height / 2,
+        renderWidth + wallThickness / 2,
+        renderHeight / 2,
         wallThickness,
-        render.options.height * 2,
+        renderHeight * 2,
         { isStatic: true, render: { visible: false } }
       ),
     ];
@@ -132,9 +134,9 @@ export const useConfettiParticles = (
 
       if (
         mousePosition.x > 0 &&
-        mousePosition.x < render.options.width &&
+        mousePosition.x < renderWidth &&
         mousePosition.y > 0 &&
-        mousePosition.y < render.options.height
+        mousePosition.y < renderHeight
       ) {
         particles.forEach((body) => {
           const dx = body.position.x - mousePosition.x;
@@ -152,17 +154,13 @@ export const useConfettiParticles = (
 
             Body.applyForce(body, body.position, force);
 
-            if (body.isSleeping) {
-              Body.setSleeping(body, false);
-            }
-          }
-
           // Ambient drift (5% chance)
           if (Math.random() < 0.05) {
             Body.applyForce(body, body.position, {
               x: Common.random(-0.00001, 0.00001),
               y: Common.random(-0.00001, 0.00001),
             });
+          }
           }
         });
       }
