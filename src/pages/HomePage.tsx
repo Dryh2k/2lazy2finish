@@ -90,7 +90,7 @@ const HomePage: React.FC = () => {
 
   const triggerFlow = async (tag: string) => {
     try {
-      await fetch('http://localhost:3001/api/trigger-flow', {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/trigger-flow`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ TAG: tag }),
