@@ -139,9 +139,34 @@ const HomePage: React.FC = () => {
         {/* Main Content */}
         <main className="flex-grow flex flex-col items-center justify-center text-center max-w-4xl mx-auto space-y-8 mt-[-5vh]">
           <div className="space-y-4">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest backdrop-blur-sm">
-              Beta v1.0
-            </span>
+            <div className="flex gap-3 justify-center" style={{ pointerEvents: 'auto' }}>
+              <button
+                onClick={() => { triggerFlow('btn-gravity-toggle'); handleGravityToggle(); }}
+                className={`w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-primary/20 text-slate-400 hover:text-white transition-colors group relative ${
+                  gravityOn ? 'text-primary bg-primary/20' : ''
+                }`}
+                title="Toggle Gravity"
+                id="btn-gravity-toggle"
+              >
+                <span className="material-symbols-outlined group-hover:rotate-180 transition-transform duration-500">
+                  public
+                </span>
+                <span className="absolute bottom-full mb-2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  {gravityOn ? 'Gravity ON' : 'Zero Gravity'}
+                </span>
+              </button>
+              <button
+                onClick={() => { triggerFlow('btn-reset'); handleReset(); }}
+                className="w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-primary/20 text-slate-400 hover:text-white transition-colors group relative"
+                title="Reset Scene"
+                id="btn-reset"
+              >
+                <span className="material-symbols-outlined group-hover:rotate-90 transition-transform">refresh</span>
+                <span className="absolute bottom-full mb-2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  Reset Scene
+                </span>
+              </button>
+            </div>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tighter leading-tight drop-shadow-2xl">
               There is a reason why <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">We are LAZY</span>
             </h1>
@@ -174,35 +199,6 @@ const HomePage: React.FC = () => {
             <div className="px-4 py-2 text-xs font-mono text-slate-400">
               FPS: <span className="text-green-400 font-bold">{fps}</span>
             </div>
-          </div>
-
-          <div className="flex gap-3" style={{ pointerEvents: 'auto' }}>
-            <button
-              onClick={() => { triggerFlow('btn-gravity-toggle'); handleGravityToggle(); }}
-              className={`w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-primary/20 text-slate-400 hover:text-white transition-colors group relative ${
-                gravityOn ? 'text-primary bg-primary/20' : ''
-              }`}
-              title="Toggle Gravity"
-              id="btn-gravity-toggle"
-            >
-              <span className="material-symbols-outlined group-hover:rotate-180 transition-transform duration-500">
-                public
-              </span>
-              <span className="absolute bottom-full mb-2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                {gravityOn ? 'Gravity ON' : 'Zero Gravity'}
-              </span>
-            </button>
-            <button
-              onClick={() => { triggerFlow('btn-reset'); handleReset(); }}
-              className="w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-primary/20 text-slate-400 hover:text-white transition-colors group relative"
-              title="Reset Scene"
-              id="btn-reset"
-            >
-              <span className="material-symbols-outlined group-hover:rotate-90 transition-transform">refresh</span>
-              <span className="absolute bottom-full mb-2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Reset Scene
-              </span>
-            </button>
           </div>
         </footer>
       </div>
