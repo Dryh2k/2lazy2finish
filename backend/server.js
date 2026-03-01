@@ -5,7 +5,11 @@ import cors from '@fastify/cors';
 const fastify = Fastify({ logger: true });
 
 await fastify.register(cors, {
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: [
+    process.env.CORS_ORIGIN || 'http://localhost:5173',
+    'https://2lazy2finish.world',
+    'https://www.2lazy2finish.world'
+  ]
 });
 
 fastify.post('/api/trigger-flow', async (request, reply) => {
