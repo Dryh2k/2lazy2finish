@@ -16,6 +16,7 @@ export const useConfettiParticles = (
   const particlesRef = useRef<Matter.Body[]>([]);
   const wallsRef = useRef<Matter.Body[]>([]);
   const mouseRef = useRef<Matter.Mouse | null>(null);
+  const mouseConstraintRef = useRef<Matter.MouseConstraint | null>(null);
 
   useEffect(() => {
     if (!engineRef.current || !renderRef.current) return;
@@ -79,64 +80,62 @@ export const useConfettiParticles = (
 
     // Create invisible boundary walls
     const wallThickness = 200;
-    const walls = [
+    const buildWalls = (w: number, h: number): Matter.Body[] => [
       Bodies.rectangle(
-        renderWidth / 2,
-        -wallThickness / 2,
-        renderWidth * 2,
-        wallThickness,
+        w / 2, -wallThickness / 2,
+        w * 2, wallThickness,
         { isStatic: true, render: { visible: false } }
       ),
       Bodies.rectangle(
-        renderWidth / 2,
-        renderHeight + wallThickness / 2,
-        renderWidth * 2,
-        wallThickness,
+        w / 2, h + wallThickness / 2,
+        w * 2, wallThickness,
         { isStatic: true, render: { visible: false } }
       ),
       Bodies.rectangle(
-        -wallThickness / 2,
-        renderHeight / 2,
-        wallThickness,
-        renderHeight * 2,
+        -wallThickness / 2, h / 2,
+        wallThickness, h * 2,
         { isStatic: true, render: { visible: false } }
       ),
       Bodies.rectangle(
-        renderWidth + wallThickness / 2,
-        renderHeight / 2,
-        wallThickness,
-        renderHeight * 2,
+        w + wallThickness / 2, h / 2,
+        wallThickness, h * 2,
         { isStatic: true, render: { visible: false } }
       ),
     ];
+    const walls = buildWalls(renderWidth, renderHeight);
     wallsRef.current = walls;
 
     Composite.add(world, [...particles, ...walls]);
 
     // Add mouse control
-    const mouse = Mouse.create(render.canvas);
-    mouseRef.current = mouse;
-    const mouseConstraint = MouseConstraint.create(engine, {
-      mouse: mouse,
-      constraint: {
-        stiffness: 0.1,
-        render: { visible: false },
-      },
-    });
-    Composite.add(world, mouseConstraint);
-    render.mouse = mouse;
+    const buildMouseConstraint = (canvas: HTMLCanvasElement): Matter.MouseConstraint => {
+      const m = Mouse.create(canvas);
+      mouseRef.current = m;
+      const mc = MouseConstraint.create(engine, {
+        mouse: m,
+        constraint: { stiffness: 0.1, render: { visible: false } },
+      });
+      mouseConstraintRef.current = mc;
+      render.mouse = m;
+      return mc;
+    };
+
+    Composite.add(world, buildMouseConstraint(render.canvas));
 
     // Mouse repulsion force field
     const beforeUpdateHandler = () => {
-      const mousePosition = mouse.position;
+      const mousePosition = mouseRef.current?.position;
       const repulsionRange = 200;
       const forceMagnitude = 0.00015;
+      const currentW = renderRef.current?.options.width ?? window.innerWidth;
+      const currentH = renderRef.current?.options.height ?? window.innerHeight;
 
       if (
+        mousePosition &&
         mousePosition.x > 0 &&
-        mousePosition.x < renderWidth &&
+        mousePosition.x < currentW &&
         mousePosition.y > 0 &&
-        mousePosition.y < renderHeight
+        mousePosition.y < currentH
       ) {
         particles.forEach((body) => {
           const dx = body.position.x - mousePosition.x;
@@ -183,11 +182,17 @@ export const useConfettiParticles = (
       renderRef.current.options.width = w;
       renderRef.current.options.height = h;
 
-      // Reposition walls
-      Body.setPosition(walls[0], { x: w / 2, y: -wallThickness / 2 });
-      Body.setPosition(walls[1], { x: w / 2, y: h + wallThickness / 2 });
-      Body.setPosition(walls[2], { x: -wallThickness / 2, y: h / 2 });
-      Body.setPosition(walls[3], { x: w + wallThickness / 2, y: h / 2 });
+      // Recreate walls with correct dimensions for the new size
+      Composite.remove(world, wallsRef.current);
+      const newWalls = buildWalls(w, h);
+      wallsRef.current = newWalls;
+      Composite.add(world, newWalls);
+
+      // Rebuild Mouse + MouseConstraint so coordinates map to the new canvas size
+      if (mouseConstraintRef.current) {
+        Composite.remove(world, mouseConstraintRef.current);
+      }
+      Composite.add(world, buildMouseConstraint(renderRef.current.canvas));
     };
 
     window.addEventListener('resize', handleResize);
