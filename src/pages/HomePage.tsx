@@ -44,8 +44,8 @@ const HomePage: React.FC = () => {
 
     particlesRef.current.forEach((body) => {
       Body.setPosition(body, {
-        x: Common.random(0, canvas.width),
-        y: Common.random(0, canvas.height),
+        x: Common.random(0, canvas.clientWidth),
+        y: Common.random(0, canvas.clientHeight),
       });
       Body.setVelocity(body, {
         x: Common.random(-2, 2),
@@ -61,8 +61,8 @@ const HomePage: React.FC = () => {
 
     particlesRef.current.forEach((body) => {
       Body.setPosition(body, {
-        x: Common.random(0, canvas.width),
-        y: Common.random(0, canvas.height),
+        x: Common.random(0, canvas.clientWidth),
+        y: Common.random(0, canvas.clientHeight),
       });
       Body.setVelocity(body, { x: 0, y: 0 });
     });
