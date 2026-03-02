@@ -42,10 +42,13 @@ const HomePage: React.FC = () => {
     const canvas = document.querySelector('canvas');
     if (!canvas) return;
 
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+
     particlesRef.current.forEach((body) => {
       Body.setPosition(body, {
-        x: Common.random(0, canvas.width),
-        y: Common.random(0, canvas.height),
+        x: Common.random(0, w),
+        y: Common.random(0, h),
       });
       Body.setVelocity(body, {
         x: Common.random(-2, 2),
@@ -59,10 +62,13 @@ const HomePage: React.FC = () => {
     const canvas = document.querySelector('canvas');
     if (!canvas) return;
 
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+
     particlesRef.current.forEach((body) => {
       Body.setPosition(body, {
-        x: Common.random(0, canvas.width),
-        y: Common.random(0, canvas.height),
+        x: Common.random(0, w),
+        y: Common.random(0, h),
       });
       Body.setVelocity(body, { x: 0, y: 0 });
     });
